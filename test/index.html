@@ -1,1 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <style>
+    html,body,input{
+      font-family: 'メイリオ'
+    }
+  </style>
+  <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.19.3/moment.min.js"></script>
+  <script>
+    /*node用モジュールをブラウザで適当に使えるように*/
+    window.module = {
+      exports:null
+    }
+    window.require = (name)=>{
+      return window[name]
+    }
+  </script>
+  <script src="../search-parts.js?raw=true"></script>
+  <title>VueSearchPartsTest</title>
+</head>
+<body>
+  <div id="app">
+    <search-parts :searches="searches" ref="sp"></search-parts>
+    <input type="button" value="Show" @click="show">
+    <input type="button" value="Reset" @click="reset">
+    <input type="button" value="Add" @click="addSearchField">
+    <div class="result">
+      <div>結果表示</div>
+      <div>{{result}}</div>
+    </div>
+  </div>
+  <script>
+    const SearchParts = window.module.exports
+    const multiParent = [
+      {caption:'ASet', value:'ASet'},
+      {caption:'BSet', value:'BSet'},
+      {caption:'CSet', value:'CSet'}
+    ]
+    const children = {
+      ASet:[{caption:'A1', value:'A1'}],
+      BSet:[{caption:'B1', value:'B1'},{caption:'B2', value:'B2'}],
+      CSet:[{caption:'C1', value:'C1'},{caption:'C2', value:'C2'},{caption:'C3', value:'C3'}]
+    }
+    switchChildren = {
+      type:'select',
+      field:'children_field',
+      caption:'Switch_children',
+      list:children.ASet,
+    }
+    new Vue({
+      el:'#app',
+      data:{
+        searches:[
+        {
+          type:'text',
+          field:'text_fieldA',
+          caption:'FieldA',
+          onchange:(v)=>{
+            console.log('Change value text_fieldA', v)
+          }
+        },
+        {
+          type:'text',
+          field:'text_fieldA',
+          caption:'FieldA',
+          like:true,
+          beforeLike:true,
+          onchange:(v)=>{
+            console.log('Change value text_fieldA', v)
+          }
+        },
+        {
+          type:'text',
+          field:'text_fieldA_with_label',
+          caption:'FieldAWithLabel',
+          label:true,
+          onchange:(v)=>{
+            console.log('Change value text_fieldA_with_label', v)
+          }
+        },
+        /*------------------------------------------------------------------------
+        label:true/falseによりplaceholderをlabel表示にする。
 
+        search-parts.js の props{label:Boolean}にtrue/falseが入り
+        computed:{
+          placeholder(){
+            return this.label ? '' : this.caption
+          }
+        },
+        でthis.labelがtrueだったらplaceholderは'空'、falseだったらcaption:'表示されるよ'を表示。
+        ------------------------------------------------------------------------*/
+        {
+          type:'select', field:'select_fieldB',caption:'FieldB',
+          list:[
+            {value:'A', caption:'ValueA'},
+            {value:'B', caption:'ValueB'},
+            {value:'C', caption:'ValueC'}
+          ],
+          def:2,//デフォルトの選択
+          onchange:(v)=>{
+            console.log('Change value text_fieldB',JSON.stringify(v))
+          }
+        },
+        {
+          type:'select', field:'select_fieldB_with_label',caption:'FieldBWithLabel',
+          list:[
+            {value:'A', caption:'ValueA'},
+            {value:'B', caption:'ValueB'},
+            {value:'C', caption:'ValueC'}
+          ],
+          // def:2,
+          label:true,
+          unselectLabel:'未選択'
+        },
+        /*------------------------------------------------------------------------
+        unselectLabel:'未選択'がある場合 selectのoptionに'未選択'を表示。
+        unselectLabel:'未選択'の記載がない場合
+        search-parts.js の
+        props{
+          unselectLabel:{
+          type:String,
+          default:'-'
+          }
+        }
+        にある'-'が表示される。
+        ------------------------------------------------------------------------*/
+        {
+          type:'multi-text',
+          field:'mtext_fieldC',
+          caption:'FieldC',
+          onchange:(v)=>{
+            console.log('Change value text_fieldC',JSON.stringify(v))
+          }
+        },
+        {
+          type:'multi-text',
+          field:'mtext_fieldC_with_label',
+          caption:'FieldCWithLabel',
+          label:true
+        },
+        {
+          type:'date',
+          caption:'FieldD',
+          field:'date_fieldD',
+          onchange:(from, to)=>{
+            console.log('Change value text_fieldB',from, to)
+          }
+        },
+        {
+          type:'date',
+          caption:'FieldDWithLabel',
+          field:'date_fieldD_with_label',
+          label:true
+        },
+        {
+          type:'multi-select',
+          field:['multi_select_fieldE', 'muti_select_fieldE2'],
+          caption:'FieldE',
+          def:[0,1],
+          size:5,
+          list:[
+            {value:'A', caption:'ValueA'},
+            {value:'B', caption:'ValueB'},
+            {value:'C', caption:'ValueC'}
+          ],
+          onchange:(v)=>{
+            console.log('Change value multi_select',JSON.stringify(v))
+          }
+        },
+        {
+          type:'multi-select',
+          field:['multi_select_fieldE', 'muti_select_fieldE2'],
+          caption:'FieldE',
+          // def:[0,1],
+          size:5,
+          list:[
+            {value:'A', caption:'ValueA'},
+            {value:'B', caption:'ValueB'},
+            {value:'C', caption:'ValueC'}
+          ],
+          label:true,
+        },
+        {
+          type:'select',
+          field:'change_parent',
+          caption:'Switch child list select',
+          list:multiParent,
+          onchange:v=>{
+            if(!v || !v.value){//init and default
+              return
+            }
+            switchChildren.list = children[v.value]
+          },
+          label:true
+        },
+        switchChildren
+        ],
+        result:''
+      },
+      components:{
+        'search-parts':SearchParts
+      },
+      methods:{
+        show(){
+          this.result = this.$refs.sp.getCondition()
+        },
+        reset(){
+          this.$refs.sp.clear()
+        },
+        addSearchField(){
+          this.searches.push({
+            type:'test',
+            caption:'追加項目',
+            field:'some_filed'
+          })
+        }
+      }
+    })
+  </script>
+</body>
+</html>
