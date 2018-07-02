@@ -1,0 +1,23 @@
+{
+  "name": "vue-search-parts",
+  "version": "1.4.0",
+  "description": "vue + electorn + sql-q search parts",
+  "main": "search-parts.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "http://10.26.196.242:4850/gitbucket/git/y.mizogami/vue-search-parts.git"
+  },
+  "keywords": [
+    "search",
+    "parts"
+  ],
+  "author": "yoshiyuki mizogami",
+  "license": "MIT",
+  "dependencies": {
+    "moment": "^2.22.1",
+    "vue": "^2.5.16"
+  }
+}
