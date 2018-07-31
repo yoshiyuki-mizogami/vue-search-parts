@@ -57,7 +57,7 @@ let TextSearch = {
   props:{
     complex:String
   },
-  template:'<div class="v-searcher">' +
+  template:'<div class="v-searcher text">' +
     '<label v-if="label" class="v-search-label">{{caption}}</label>' +
     '<input type="text" class="text-search" :placeholder="placeholder" v-model="value" @change="change">' +
   '</div>',
@@ -79,7 +79,7 @@ let TextSearch = {
 }
 let MultiTextSearch = {
   mixins:[Search],
-  template:'<div class="v-searcher">' +
+  template:'<div class="v-searcher multi-text">' +
     '<label v-if="label" class="v-search-label">{{caption}}</label>' +
     '<textarea class="mutil-text-search" v-model="value" :placeholder="placeholder" @change="change"></textarea>' +
   '</div>',
@@ -110,7 +110,7 @@ let DateSearch = {
     }
   },
   mixins:[Search],
-  template:'<div class="v-searcher">' +
+  template:'<div class="v-searcher date">' +
     '<label v-if="label" class="v-search-label">{{caption}}</label>' +
     '<input class="date-search" :placeholder="placeholder +\' from\'" @change="onchangeDate" @click="set(\'from\')" @wheel="wheelMove(\'from\', $event)" @keydown="keyMove(\'from\', $event)" v-model="value.from" type="text">' + 
     '<input  class="date-search" placeholder="to" @click="set(\'to\')" @change="onchangeDate" @wheel="wheelMove(\'to\', $event)" @keydown="keyMove(\'to\' ,$event)" v-model="value.to" type="text">' +
@@ -195,7 +195,7 @@ let SelectSearch = {
       default:'-'
     }
   },
-  template:'<div class="v-searcher">' +
+  template:'<div class="v-searcher select">' +
     '<label v-if="label" class="v-search-label">{{caption}}</label>' +
     '<select class="v-search-select" v-model="value" @change="change">' +
     '<option :value="defaultObj">{{placeholder}}</option>' +
@@ -253,7 +253,7 @@ let MultiSelectSearch = {
       default:3
     }
   },
-  template:'<div class="v-searcher" @change="change">' +
+  template:'<div class="v-searcher multi-select" @change="change">' +
     '<label v-if="label" class="v-search-label">{{caption}}</label>' + 
     '<select class="v-search-multi-select" v-model="value" multiple :size="size" @change="change">' +
     '<option v-if="!label" :value="defaultArray">{{caption}}</option>' +
@@ -309,7 +309,7 @@ let NullOrNotSearch = {
       default:'Not Null'
     }
   },
-  template:'<div class="v-searcher">' +
+  template:'<div class="v-searcher null-or-not">' +
     '<label v-if="label" class="v-search-label">{{caption}}</label>' +
     '<select class="v-search-null-or-not" v-model="value" @change="change">' +
     '<option :value="defaultStr">{{placeholder}}</option>' +
